@@ -23,4 +23,4 @@ pre-commit:
       run: biome lint . --write
     yaml:
       glob: "*.{yaml,yml}"
-      run: yamlfmt .
+      run: yamlfmt -conf .yamlfmt.yaml .
