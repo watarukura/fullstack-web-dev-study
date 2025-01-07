@@ -5,7 +5,7 @@
 #   require_checksum: true
 #   supported_envs:
 #   - all
-# yaml-language-server: https://raw.githubusercontent.com/aquaproj/aqua/main/json-schema/policy.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/aquaproj/aqua/main/json-schema/policy.json
 registries:
   - type: standard
     ref: v4.292.0 # renovate: depName=aquaproj/aqua-registry
