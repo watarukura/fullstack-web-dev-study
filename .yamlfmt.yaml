@@ -1,0 +1,3 @@
+# yaml-language-server https://raw.githubusercontent.com/google/yamlfmt/refs/heads/main/schema.json
+exclude:
+  - pnpm-lock.yaml
