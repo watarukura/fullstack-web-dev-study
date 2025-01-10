@@ -36,7 +36,9 @@ export default function Page() {
   return (
     <>
       <h2>商品一覧</h2>
-      <button type="button" onClick={handleShowNewRow}>商品を追加する</button>
+      <button type="button" onClick={handleShowNewRow}>
+        商品を追加する
+      </button>
       <table>
         <thead>
           <tr>
@@ -63,8 +65,12 @@ export default function Page() {
               </td>
               <td />
               <td>
-                <button type="button" onClick={handleAddCancel}>キャンセル</button>
-                <button type="button" onClick={handleAdd}>登録する</button>
+                <button type="button" onClick={handleAddCancel}>
+                  キャンセル
+                </button>
+                <button type="button" onClick={handleAdd}>
+                  登録する
+                </button>
               </td>
             </tr>
           ) : (
