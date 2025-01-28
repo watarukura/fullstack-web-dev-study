@@ -5,9 +5,16 @@ import productsData from "./sample/dummy_products.json";
 import Link from "next/link";
 
 type ProductData = {
-  id: number;
+  id: number | null;
   name: string;
   price: number;
+  description: string;
+};
+
+type InputData = {
+  id: string;
+  name: string;
+  price: string;
   description: string;
 };
 
@@ -17,6 +24,18 @@ export default function Page() {
   useEffect(() => {
     setData(productsData);
   }, []);
+
+  const [input, setInput] = useState<InputData>({
+    id: "",
+    name: "",
+    price: "",
+    description: "",
+  });
+
+  const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value, name } = event.target;
+    setInput({ ...input, [name]: value });
+  };
 
   const [shownNewRow, setShownNewRow] = useState(false);
   const handleShowNewRow = (event: React.MouseEvent<HTMLElement>) => {
@@ -31,6 +50,34 @@ export default function Page() {
     event.preventDefault();
     // backendを使用した登録処理を呼ぶ
     setShownNewRow(false);
+  };
+
+  const [editingRow, setEditingRow] = useState(0);
+  // biome-ignore lint/suspicious/noExplicitAny: temporary
+  const handleEditRow: any = (id: number) => {
+    setShownNewRow(false);
+    setEditingRow(id);
+    const selectedProduct: ProductData = data.find(
+      (v) => v.id === id,
+    ) as ProductData;
+    setInput({
+      id: id.toString(),
+      name: selectedProduct.name,
+      price: selectedProduct.price.toString(),
+      description: selectedProduct.description,
+    });
+  };
+  // biome-ignore lint/suspicious/noExplicitAny: temporary
+  const handleEditCancel: any = (id: number) => {
+    setEditingRow(0);
+  };
+  // biome-ignore lint/suspicious/noExplicitAny: temporary
+  const handleEdit: any = (id: number) => {
+    setEditingRow(0);
+  };
+  // biome-ignore lint/suspicious/noExplicitAny: temporary
+  const handleDelete: any = (id: number) => {
+    setEditingRow(0);
   };
 
   return (
@@ -55,20 +102,23 @@ export default function Page() {
             <tr>
               <td />
               <td>
-                <input type="text" />
+                <input type="text" name="name" onChange={handleInput} />
               </td>
               <td>
-                <input type="number" />
+                <input type="number" name="price" onChange={handleInput} />
               </td>
               <td>
-                <input type="text" />
+                <input type="text" name="description" onChange={handleInput} />
               </td>
               <td />
               <td>
-                <button type="button" onClick={handleAddCancel}>
+                <button
+                  type="button"
+                  onClick={(event) => handleAddCancel(event)}
+                >
                   キャンセル
                 </button>
-                <button type="button" onClick={handleAdd}>
+                <button type="button" onClick={(event) => handleAdd(event)}>
                   登録する
                 </button>
               </td>
@@ -76,20 +126,67 @@ export default function Page() {
           ) : (
             ""
           )}
-          {data.map((data: ProductData) => (
-            <tr key={data.id}>
-              <td>{data.id}</td>
-              <td>{data.name}</td>
-              <td>{data.price}</td>
-              <td>{data.description}</td>
-              <td>
-                <Link href={`/inventory/products/${data.id}`}>在庫管理</Link>
-              </td>
-              <td>
-                <button type="button">更新・削除</button>
-              </td>
-            </tr>
-          ))}
+          {data.map((data: ProductData) =>
+            editingRow === data.id ? (
+              <tr key={data.id}>
+                <td>{data.id}</td>
+                <td>
+                  <input
+                    type="text"
+                    value={input.name}
+                    name="name"
+                    onChange={handleInput}
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    value={input.price}
+                    name="price"
+                    onChange={handleInput}
+                  />
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    value={input.description}
+                    name="description"
+                    onChange={handleInput}
+                  />
+                </td>
+                <td />
+                <td>
+                  <button
+                    type="button"
+                    onClick={() => handleEditCancel(data.id)}
+                  >
+                    キャンセル
+                  </button>
+                  <button type="button" onClick={() => handleEdit(data.id)}>
+                    更新する
+                  </button>
+                  <button type="button" onClick={() => handleDelete(data.id)}>
+                    削除する
+                  </button>
+                </td>
+              </tr>
+            ) : (
+              <tr key={data.id}>
+                <td> {data.id}</td>
+                <td>{data.name}</td>
+                <td>{data.price}</td>
+                <td>{data.description}</td>
+                <td>
+                  <Link href={`/inventory/products/${data.id}`}>在庫管理</Link>
+                </td>
+                <td>
+                  <button type="submit" onClick={() => handleEditRow(data.id)}>
+                    更新・削除
+                  </button>
+                </td>
+              </tr>
+            ),
+          )}
         </tbody>
       </table>
     </>
